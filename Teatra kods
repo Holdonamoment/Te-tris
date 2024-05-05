@@ -200,7 +200,7 @@ int main()
                     std::cout <<i+1<<".   " << IZRADE_NOS[i] << "   " << laiks[i] << " - " << Cena[i]<<"Eur" << endl;
                 }
                 int incase = 0;
-                while (incase < 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
+                while (incase > 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
                 {
                     std::cin >> IZRADE;
                     if (IZRADE < IZR_Skaits + 1 && IZRADE>0)
@@ -233,7 +233,7 @@ int main()
                     std::cout <<i+1<<".   " << IZRADE_NOS[i] << "   " << laiks[i] << " - " << Cena[i]<<"Eur" << endl;
                 }
                 int incase = 0;
-                while (incase < 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
+                while (incase > 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
                 {
                     std::cin >> IZRADE;
                     if (IZRADE < IZR_Skaits + 1 && IZRADE>0)
