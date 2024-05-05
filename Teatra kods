@@ -1,0 +1,497 @@
+#include <iostream>//main funkcija
+#include <map>//map funkcijai
+#include <fstream>//failu atvēršanai
+#include <string>//string
+#include <windows.h>//konsoles krāsas mainīšanai
+#include <stdlib.h>//konsoles dzēšanai
+#include <algorithm>//nezinu/neatceros, man šķiet, ka nekam netiek izmantots, bet man ir bail viņu ņemt nost
+
+using namespace std;
+
+int main()
+{
+
+
+    fstream check;
+    check.open("TeatraDati.txt");//atver failu, ja tas ir iespējams
+    if (check.is_open())
+    {
+        check.close();
+    }
+    else
+    {
+        check.open("TeatraDati.txt", ios::out);//uztaisa failu, ja tāda nav
+        string null = "0";
+        check << null << endl;
+        check.close();
+    }
+
+
+
+
+
+
+
+
+
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);// krāsas mainītājs konsolei
+    SetConsoleTextAttribute(hConsole, 6);
+
+    //Mainīgie
+    int IZR_Skaits = 0;
+
+    int krasa = 0;
+
+    int REZ[9][9][100] = {};
+
+    map<int, int>REZERVE;//Rezervētās un brīvās vietas
+
+    int rindas = 0;//nosaka rindu
+
+    int kollonas = 0;//nosaka kollonu
+
+    int JANE = 0;//pārliecināšanās
+
+    int IZRADE = 0;//kura izrāde tagad ir
+
+    string laiks[100] = {};
+
+    map<string, string>IZR_Dati;
+
+    string IZRADE_NOS[100] = {};
+
+    fstream Teatris;
+
+    string dati = " ";
+
+    int izvade = 1;
+
+    int parole = 0;
+
+    string Cena[100] = {};
+
+    //-----------------------------------------------------------------------------------------------------------------------
+
+    Teatris.open("TeatraDati.txt");
+
+    while (izvade < 8)//datu ievade no csv faila
+    {
+        if (izvade == 1)//Izvada izrāžu skaitu
+        {
+            getline(Teatris, dati);
+            IZR_Skaits = stoi(dati);// stoi funkcija pārvērš stringu par integer, parcik getline funkcija negrib sastrādāties ar auto funkciju
+            izvade++;
+        }
+        if (IZR_Skaits == 0)
+        {
+            parole = 2;
+            SetConsoleTextAttribute(hConsole, 6);
+            std::cout << "Kā administrators, ievadi Izrādes nosaukumu" << endl;
+            std::cin >> IZRADE_NOS[0];
+            std::cout << "Ievadi Izrādes dienu.mēnesi: laiku 24h apmērā"<<endl;
+            std::cin >> laiks[0];
+            std::cout << "Ievadi biļetes cenu Eur - ";
+            std::cin >> Cena[0];
+            IZR_Skaits++;
+            std::cout << endl;
+            system("CLS");
+            break;
+        }
+        else if (izvade == 2)//Nolasa rezervētās vietas katrai izrādei
+        {
+            for (int i = 0; i < IZR_Skaits; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    for (int k = 0; k < 9; k++)
+                    {
+                        getline(Teatris, dati);
+                        REZ[j][k][i] = stoi(dati);// maksimālie 88 / 188 / 288 / 388 / 488........
+
+                    }
+                }
+            }
+            izvade++;
+        }
+        else if (izvade == 3)//nolasa izrādes nosaukumu/ laikus/ cenu
+        {
+            for (int i = 0; i < IZR_Skaits; i++)
+            {
+                getline(Teatris, dati);
+                IZRADE_NOS[i]=dati;
+            }
+            for (int i = 0; i < IZR_Skaits; i++)
+            {
+                getline(Teatris, dati);
+                laiks[i]=dati;
+            }
+            for (int i = 0; i < IZR_Skaits; i++)
+            {
+                getline(Teatris, dati);
+                Cena[i]=dati;
+            }
+            break;
+        }
+    }
+    Teatris.close();
+
+
+
+    //-------------------------------------------------------------------------------------------------------------------------
+
+    for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+    {
+        std::cout << i + 1 << ".rinda  ";
+        for (int j = 0; j < 9; j++)
+        {
+            REZERVE[i * 10 + j] = j + 1;
+            if (REZ[i][j][IZRADE] == 0)
+            {
+                krasa = 2;
+                SetConsoleTextAttribute(hConsole, krasa);
+            }
+            else
+            {
+                krasa = 4;
+                SetConsoleTextAttribute(hConsole, krasa);
+            }
+            std::cout << REZERVE[i * 10 + j] << " ";
+        }
+        std::cout << endl;
+        SetConsoleTextAttribute(hConsole, 6);
+        system("CLS");
+    }
+
+
+
+    //----------------------------------------------------------------------------------------------------------------------
+
+
+
+    //Administrators?
+    if (parole == 0)
+    {
+            while (parole < 1 || parole>2)
+            {
+                std::cout << "\n\n1-Lietotājs\n2-Administrators\n";
+                std::cin >> parole;
+            }
+            system("CLS");
+    }
+    int Strada = 1;
+
+
+    //-----------------------------------------------------------------------------------------------------------------------
+
+
+    while (Strada < 2)//loops visai darbībai
+    {
+        int darbiba = 0;
+
+
+        if (parole == 1)//Lietotājs
+        {
+            while (darbiba < 1 || darbiba>5)
+            {
+                
+                std::cout << endl << "Izvēlies izrādes nummuru, kuru gribi izvēlēties"<<endl;
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    std::cout <<i+1<<".   " << IZRADE_NOS[i] << "   " << laiks[i] << " - " << Cena[i]<<"Eur" << endl;
+                }
+                int incase = 0;
+                while (incase < 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
+                {
+                    std::cin >> IZRADE;
+                    if (IZRADE < IZR_Skaits + 1 && IZRADE>0)
+                    {
+                        incase++;
+                    }
+                    else
+                    {
+                        std::cout << "Neder, mēģini velreiz" << endl;
+                    }
+                }
+                system("CLS");
+                IZRADE--;
+                std::cout << endl << "\n\n1-Rezervēt vietu\n2-Iziet\n";
+                std::cin >> darbiba;
+                if (darbiba == 2)
+                {
+                    darbiba=darbiba+3;
+                }
+            }
+            system("CLS");
+        }
+        else if (parole == 2)// Administrators
+        {
+            while (darbiba < 1 || darbiba>5)
+            {
+                std::cout << endl << "Izvēlies izrādes nummuru, kuru gribi izvēlēties" << endl;
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    std::cout <<i+1<<".   " << IZRADE_NOS[i] << "   " << laiks[i] << " - " << Cena[i]<<"Eur" << endl;
+                }
+                int incase = 0;
+                while (incase < 1);//Pārbauda, vai ievada skaitli izrāžu skaita limitā
+                {
+                    std::cin >> IZRADE;
+                    if (IZRADE < IZR_Skaits + 1 && IZRADE>0)
+                    {
+                        incase++;
+                    }
+                    else
+                    {
+                        std::cout << "Neder, mēģini velreiz" << endl;
+                    }
+                }
+                system("CLS");
+                IZRADE--;
+                std::cout << endl << "\n\n1-Rezervēt vietu\n2-Atcelt rezervēto vietu\n3-Izveidot jaunu izrādi\n4-Pārveidot izrādi\n5-Iziet\n";
+                std::cin >> darbiba;
+            }
+            system("CLS");
+        }
+
+
+        //-----------------------------------------------------------------------------------------------------------------
+
+
+        //Darbības izvēle
+        switch (darbiba)
+        {
+        case 1://Rezervē vietu
+        {
+            std::cout << "\n\nIzvēlies rindu un kollonnu, lai izvelētos vietu, kuru gribat rezervēt\n\n";
+            std::cout << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE]<<"Eur" << endl;
+            for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+            {
+                std::cout << i + 1 << ".rinda  ";
+                for (int j = 0; j < 9; j++)
+                {
+                    REZERVE[i * 10 + j] = j + 1;
+                    if (REZ[i][j][IZRADE] == 0)
+                    {
+                        krasa = 2;
+                        SetConsoleTextAttribute(hConsole, krasa);
+                    }
+                    else
+                    {
+                        krasa = 4;
+                        SetConsoleTextAttribute(hConsole, krasa);
+                    }
+                    std::cout << REZERVE[i * 10 + j] << " ";
+                }
+                std::cout << endl;
+                SetConsoleTextAttribute(hConsole, 6);
+            }
+            std::cin >> rindas >> kollonas;
+            rindas--;
+            kollonas--;
+            system("CLS");
+            std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
+            std::cin >> JANE;//Pārliecinās par izvēli
+            if (JANE == 1)//Jā
+            {
+                REZ[rindas][kollonas][IZRADE] = 1;
+                std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE]<<"Eur" << endl;
+                for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+                {
+                    std::cout << i + 1 << ".rinda  ";
+                    for (int j = 0; j < 9; j++)
+                    {
+                        REZERVE[i * 10 + j] = j + 1;
+                        if (REZ[i][j][IZRADE] == 0)
+                        {
+                            krasa = 2;
+                            SetConsoleTextAttribute(hConsole, krasa);
+                        }
+                        else
+                        {
+                            krasa = 4;
+                            SetConsoleTextAttribute(hConsole, krasa);
+                        }
+                        std::cout << REZERVE[i * 10 + j] << " ";
+                    }
+                    std::cout << endl;
+                    SetConsoleTextAttribute(hConsole, 6);
+                }
+            }
+            else if (JANE == 2)//Nē
+            {
+                rindas = -1;
+                kollonas = -1;
+            }
+            else
+            {
+                std::cout << "\n\nERROR";
+            }
+            system("CLS");
+
+            darbiba = 0;
+            string enter = " ";
+            std::cout << "uzspied enter, lai turpinātu";
+            std::cin >> enter;
+            system("CLS");
+            break;
+        }
+
+
+        //----------------------------------------------------------------------------------------------------------
+
+
+
+        case 2://Atcelt rezervēto vietu
+        {
+            std::cout << "\n\nIzvēlies vietu kurai gribi noņemt rezervāciju\n";
+            std::cin >> rindas >> kollonas;
+            while (rindas > 0 && rindas<10 && kollonas>0 && kollonas < 10)
+            {
+                rindas--;
+                kollonas--;
+                system("CLS");
+                std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
+                std::cin >> JANE;//Pārliecinās par izvēli
+                if (JANE == 1)//Jā
+                {
+                    REZ[rindas][kollonas][IZRADE] = 0;
+                }
+                else if (JANE == 2)//Nē
+                {
+                    rindas = -1;
+                    kollonas = -1;
+                }
+                else
+                {
+                    std::cout << "\n\nERROR";
+                }
+            }
+
+            system("CLS");
+            darbiba = 0;
+            break;
+        }
+
+
+        //---------------------------------------------------------------------------------------
+        case 3:// Izveido jaunu izrādi
+        {
+            std::cout << "Kā administrators, ievadi Izrādes nosaukumu" << endl;
+            std::cin >> IZRADE_NOS[IZR_Skaits];
+            std::cout << "Ievadi Izrādes laiku diena.mēnesis-24h apmērā, bez atstarpēm, piem. 13.maijs-12:30" << endl;
+            std::cin >> laiks[IZR_Skaits];
+            std::cout << "Ievadi biļetes cenu Eur - ";
+            std::cin >> Cena[IZR_Skaits];
+            system("CLS");
+            std::cout << "   " << IZRADE_NOS[IZR_Skaits] << "   " << laiks[IZR_Skaits] << " - " << Cena[IZR_Skaits]<<"Eur" << endl;
+            for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+            {
+                std::cout << i + 1 << ".rinda  ";
+                for (int j = 0; j < 9; j++)
+                {
+                    REZ[i][j][IZR_Skaits] = 0;
+                }                
+            }
+            
+            system("CLS");
+            IZR_Skaits++;
+            break;
+        }
+        //---------------------------------------------------------------------------------------
+        case 4://pārtaisa izrādi
+        {
+            std::cout << "Kā administrators, ievadi Izrādes nosaukumu" << endl;
+            std::cin >> IZRADE_NOS[IZRADE];
+            std::cout << "Ievadi Izrādes laiku diena.mēnesis-24h apmērā, bez atstarpēm, piem. 13.maijs-12:30" << endl;
+            std::cin >> laiks[IZRADE];
+            std::cout << "Ievadi biļetes cenu Eur - ";
+            std::cin >> Cena[IZRADE];
+            system("CLS");
+            std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE]<<"Eur" << endl;
+            for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+            {
+                std::cout << i + 1 << ".rinda  ";
+                for (int j = 0; j < 9; j++)
+                {
+                    REZ[i][j][IZRADE]=0;
+                }                
+            }
+
+            system("CLS");
+            break;
+
+        }
+        //---------------------------------------------------------------------------------------
+        case 5://Iziet saglabājot datus
+        {
+            std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
+            std::cin >> JANE;
+            system("CLS");
+            if (JANE == 1)//Jā
+            {
+                Teatris.open("TeatraDati.txt");
+                Teatris << IZR_Skaits << endl;
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        for (int k = 0; k < 9; k++)
+                        {
+                            Teatris << REZ[j][k][i] << endl;// maksimālie 88 / 188 / 288 / 388 / 488........
+
+                        }
+                    }
+                }
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    Teatris << IZRADE_NOS[i] << endl;
+                }
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    Teatris << laiks[i] << endl;
+                }
+                for (int i = 0; i < IZR_Skaits; i++)
+                {
+                    Teatris << Cena[i] << endl;
+                }
+                Teatris << endl;
+                Teatris.close();
+
+                return 0;
+            }
+            else if (JANE == 2)//Nē
+            {
+                break;
+            }
+        }
+        
+        }
+    }
+    std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE]<<"Eur" << endl;
+    for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
+    {
+        std::cout << i + 1 << ".rinda  ";
+        for (int j = 0; j < 9; j++)
+        {
+            REZERVE[i * 10 + j] = j + 1;
+            if (REZ[i][j][IZRADE] == 0)
+            {
+                krasa = 2;
+                SetConsoleTextAttribute(hConsole, krasa);
+            }
+            else
+            {
+                krasa = 4;
+                SetConsoleTextAttribute(hConsole, krasa);
+            }
+            std::cout << REZERVE[i * 10 + j] << " ";
+        }
+        std::cout << endl;
+        SetConsoleTextAttribute(hConsole, 6);
+    }
+    string enter = " ";
+    std::cout << "uzspied enter, lai turpinātu";
+    std::cin >> enter;
+    system("CLS");
+
+}
