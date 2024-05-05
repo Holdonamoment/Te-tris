@@ -344,7 +344,7 @@ int main()
             kollonas = 0;
             rindas = 0;
             string enter = " ";
-            std::cout << "uzspied enter, lai turpinātu";
+            std::cout << "ievadi jebko, lai turpinātu";
             std::cin >> enter;
             system("CLS");
             break;
@@ -432,7 +432,7 @@ int main()
             kollonas = 0;
             rindas = 0;
             string enter = " ";
-            std::cout << "uzspied enter, lai turpinātu";
+            std::cout << "ievadi jebko, lai turpinātu";
             std::cin >> enter;
             system("CLS");
             break;
@@ -556,7 +556,7 @@ int main()
         SetConsoleTextAttribute(hConsole, 6);
     }
     string enter = " ";
-    std::cout << "uzspied enter, lai turpinātu";
+    std::cout << "ievadi jebko, lai turpinātu";
     std::cin >> enter;
     system("CLS");
     
