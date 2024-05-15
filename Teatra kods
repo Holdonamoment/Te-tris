@@ -96,7 +96,7 @@ int main()
             std::cin >> Cena[0];
             IZR_Skaits++;
             std::cout << endl;
-            system("CLS");
+            std::system("CLS");
             break;
         }
         else if (izvade == 2)//Nolasa rezervētās vietas katrai izrādei
@@ -161,7 +161,7 @@ int main()
         }
         std::cout << endl;
         SetConsoleTextAttribute(hConsole, 6);
-        system("CLS");
+        std::system("CLS");
     }
 
 
@@ -178,7 +178,7 @@ int main()
                 std::cout << "\n\n1-Lietotājs\n2-Administrators\n";
                 std::cin >> parole;
             }
-            system("CLS");
+            std::system("CLS");
     }
     int Strada = 1;
 
@@ -215,7 +215,7 @@ int main()
                     }
                 }
                 incase = 0;
-                system("CLS");
+                std::system("CLS");
                 IZRADE--;
                 std::cout << endl << "\n\n1-Rezervēt vietu\n2-Iziet\n";
                 std::cin >> darbiba;
@@ -224,7 +224,7 @@ int main()
                     darbiba=darbiba+3;
                 }
             }
-            system("CLS");
+            std::system("CLS");
         }
         else if (parole == 2)// Administrators
         {
@@ -249,12 +249,12 @@ int main()
                     }
                 }
                 incase = 0;
-                system("CLS");
+                std::system("CLS");
                 IZRADE--;
                 std::cout << endl << "\n\n1-Rezervēt vietu\n2-Atcelt rezervēto vietu\n3-Izveidot jaunu izrādi\n4-Pārveidot izrādi\n5-Iziet\n";
                 std::cin >> darbiba;
             }
-            system("CLS");
+            std::system("CLS");
         }
 
 
@@ -295,12 +295,12 @@ int main()
                 std::cin >> rindas >> kollonas;
                 rindas--;
                 kollonas--;
-                system("CLS");
+                std::system("CLS");
                 std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
                 std::cin >> JANE;//Pārliecinās par izvēli
                 if (JANE == 1)//Jā
                 {
-                    system("CLS");
+                    std::system("CLS");
                     REZ[rindas][kollonas][IZRADE] = 1;
                     std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE] << "Eur" << endl;
                     for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
@@ -327,7 +327,7 @@ int main()
                 }
                 else if (JANE == 2)//Nē
                 {
-                    system("CLS");
+                    std::system("CLS");
                     rindas = -1;
                     kollonas = -1;
                 }
@@ -346,7 +346,7 @@ int main()
             string enter = " ";
             std::cout << "ievadi jebko, lai turpinātu";
             std::cin >> enter;
-            system("CLS");
+            std::system("CLS");
             break;
         }
 
@@ -385,13 +385,13 @@ int main()
                 std::cin >> rindas >> kollonas;
                     rindas--;
                 kollonas--;
-                system("CLS");
+                std::system("CLS");
                 std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
                 std::cin >> JANE;//Pārliecinās par izvēli
                 if (JANE == 1)//Jā
                 {
                     REZ[rindas][kollonas][IZRADE] = 0;
-                    system("CLS");
+                    std::system("CLS");
                     std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE] << "Eur" << endl;
                     for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
                     {
@@ -434,7 +434,7 @@ int main()
             string enter = " ";
             std::cout << "ievadi jebko, lai turpinātu";
             std::cin >> enter;
-            system("CLS");
+            std::system("CLS");
             break;
         }
 
@@ -448,7 +448,7 @@ int main()
             std::cin >> laiks[IZR_Skaits];
             std::cout << "Ievadi biļetes cenu Eur - ";
             std::cin >> Cena[IZR_Skaits];
-            system("CLS");
+            std::system("CLS");
             std::cout << "   " << IZRADE_NOS[IZR_Skaits] << "   " << laiks[IZR_Skaits] << " - " << Cena[IZR_Skaits]<<"Eur" << endl;
             for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
             {
@@ -459,7 +459,7 @@ int main()
                 }                
             }
             
-            system("CLS");
+            std::system("CLS");
             IZR_Skaits++;
             break;
         }
@@ -472,7 +472,7 @@ int main()
             std::cin >> laiks[IZRADE];
             std::cout << "Ievadi biļetes cenu Eur - ";
             std::cin >> Cena[IZRADE];
-            system("CLS");
+            std::system("CLS");
             std::cout << "   " << IZRADE_NOS[IZRADE] << "   " << laiks[IZRADE] << " - " << Cena[IZRADE]<<"Eur" << endl;
             for (int i = 0; i < 9; i++)//rezerve ir skaitlis/10 un skaitlis%10
             {
@@ -483,7 +483,7 @@ int main()
                 }                
             }
 
-            system("CLS");
+            std::system("CLS");
             break;
 
         }
@@ -492,7 +492,7 @@ int main()
         {
             std::cout << "\n\nPārliecināti?\n1 - Jā\n2 - Nē\n";
             std::cin >> JANE;
-            system("CLS");
+            std::system("CLS");
             if (JANE == 1)//Jā
             {
                 Teatris.open("TeatraDati.txt");
@@ -558,11 +558,7 @@ int main()
     string enter = " ";
     std::cout << "ievadi jebko, lai turpinātu";
     std::cin >> enter;
-    system("CLS");
+    std::system("CLS");
     
-
-}
-    std::cin >> enter;
-    system("CLS");
 
 }
